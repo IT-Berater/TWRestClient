@@ -19,6 +19,14 @@ public class Abfrage {
 	// URL des Feeds aller Flugzeuge in Hannover von Thomas Wenzlaff. //
 	private final static String FLUGZEUG_URL = "https://api.thingspeak.com/channels/44177/feeds/last.xml";
 
+	/**
+	 * Start Methode.
+	 * 
+	 * @param args
+	 *            keine.
+	 * @throws JDOMException
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws JDOMException, IOException {
 
 		String result = ClientBuilder.newClient().target(FLUGZEUG_URL).request().get(String.class);
