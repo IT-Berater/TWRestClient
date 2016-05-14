@@ -4,6 +4,17 @@
 	<groupId>de.wenzlaff.rest.beispiel</groupId>
 	<artifactId>de.wenzlaff.rest.beispiel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
+	<organization>
+		<url>http://www.wenzlaff.de</url>
+		<name>Thomas Wenzlaff</name>
+	</organization>
+	<scm>
+		<url>https://github.com/IT-Berater/TWRestClient.git</url>
+	</scm>
+	<name>TWRestClient</name>
+	<url>http://blog.wenzlaff.de/?p=7047</url>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
@@ -16,4 +27,5 @@
 			<version>2.0.6</version>
 		</dependency>
 	</dependencies>
+	
 </project>
