@@ -32,7 +32,6 @@ public class Abfrage {
 	 *            keine.
 	 * @throws Exception
 	 *             bei Fehlern
-	 * 
 	 */
 	public static void main(String[] args) throws Exception {
 
