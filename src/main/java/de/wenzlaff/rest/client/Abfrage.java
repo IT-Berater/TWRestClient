@@ -1,12 +1,19 @@
 package de.wenzlaff.rest.client;
 
-import java.io.IOException;
-import java.io.StringReader;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.KeyMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.ClientBuilder;
-
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
+import de.wenzlaff.timer.AbfrageJob;
+import de.wenzlaff.timer.AbfrageListener;
 
 /**
  * Beispiel REST Abfrage der Flugzeugdaten aus Hannover.
@@ -16,33 +23,35 @@ import org.jdom2.input.SAXBuilder;
  */
 public class Abfrage {
 
-	// URL des Feeds aller Flugzeuge in Hannover von Thomas Wenzlaff. //
-	private final static String FLUGZEUG_URL = "https://api.thingspeak.com/channels/44177/feeds/last.xml";
+	private static final Logger LOG = LoggerFactory.getLogger(Abfrage.class);
 
 	/**
 	 * Start Methode.
 	 * 
 	 * @param args
 	 *            keine.
-	 * @throws JDOMException
-	 * @throws IOException
+	 * @throws Exception
+	 *             bei Fehlern
+	 * 
 	 */
-	public static void main(String[] args) throws JDOMException, IOException {
+	public static void main(String[] args) throws Exception {
 
-		String result = ClientBuilder.newClient().target(FLUGZEUG_URL).request().get(String.class);
-		// result get sample:
-		// <?xml version="1.0" encoding="UTF-8"?>
-		// <feed>
-		// <created-at type="dateTime">2016-05-13T12:20:01Z</created-at>
-		// <entry-id type="integer">79166</entry-id>
-		// <field1>18</field1>
-		// <id type="integer" nil="true"/>
-		// </feed>
+		LOG.info("Starte Flugzeu Abfrage");
 
-		String field1 = new SAXBuilder().build(new StringReader(result)).getDocument().getRootElement().getChild("field1").getText();
+		// nun ein Beispiel zum periodischen Abfragen mit Quarz
+		final JobKey abfrageKey = new JobKey("AbfrageNamen", "AbfrageGruppe");
+		final JobDetail job = JobBuilder.newJob(AbfrageJob.class).withIdentity(abfrageKey).build();
 
-		System.out.println("Aktuelle Anzahl Flugzeuge in Langenhagen: " + field1);
+		// alle 5 Sekunden
+		final Trigger trigger = TriggerBuilder.newTrigger().withIdentity("AbfrageNamen", "AbfrageGruppe").withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?")).build();
 
+		final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+
+		// Listener mit den abfrageKey verbinden
+		scheduler.getListenerManager().addJobListener(new AbfrageListener(), KeyMatcher.keyEquals(abfrageKey));
+
+		scheduler.start();
+		scheduler.scheduleJob(job, trigger);
 	}
 
 }
