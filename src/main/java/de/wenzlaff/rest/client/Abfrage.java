@@ -42,6 +42,7 @@ public class Abfrage {
 		String field1 = new SAXBuilder().build(new StringReader(result)).getDocument().getRootElement().getChild("field1").getText();
 
 		System.out.println("Aktuelle Anzahl Flugzeuge in Langenhagen: " + field1);
+
 	}
 
 }
