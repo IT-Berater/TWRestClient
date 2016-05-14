@@ -36,7 +36,7 @@ public class Abfrage {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		LOG.info("Starte Flugzeu Abfrage");
+		LOG.info("Starte Flugzeug Abfrage");
 
 		// nun ein Beispiel zum periodischen Abfragen mit Quarz
 		final JobKey abfrageKey = new JobKey("AbfrageNamen", "AbfrageGruppe");
